@@ -2,13 +2,13 @@
 def SortJobs (jobs)
   #Arrays for final sorted and temporary storing
   sortedjobs = []
-  tempjobs =[]
+  tempjobs = []
   
   #Check if job structure is a hash, return error if not
   if !jobs.is_a? Hash
     puts 'Argument is not a hash'
   else
-    puts '  Start of dependency checking'
+    #puts '  Start of dependency checking'
     
     #Continue with loop + sorting
     jobs.each do | job, dependency |
@@ -18,28 +18,52 @@ def SortJobs (jobs)
           'job' => job,
           'dependency' => dependency
           })
-        puts 'No dependency'
-      #if dependency, add after dependent job
+        #puts 'No dependency'
+      #If dependency, add after dependent job
       else
-        sortedjobs.push({
-          'job' => job,
-          'dependency' => dependency
-          })
-        puts 'Dependency'
+        #Search for index location within array already
+        existingindex = sortedjobs.find_index { |search| search['job'] == dependency }
+        #If dependency within sorted array already, insert to index location + 1
+        if existingindex
+          sortedjobs.insert(existingindex + 1, {
+            'job' => job,
+            'dependency' => dependency
+            })
+        #If dependency not within array, write to temp
+        else
+          tempjobs.push({
+            'job' => job,
+            'dependency' => dependency
+            })
+        end
+        #puts 'Dependency'
       end
     end
     
-    puts '  End of dependency checking'
+    #puts '  End of dependency checking'
   end
-    
-  return sortedjobs
+  
+  #return sortedjobs
+  #return tempjobs
+  return ['Sorted Jobs array:', sortedjobs,'', 'Temp Jobs array', tempjobs]
     
 end
 
 ###
-#Test cases (same as bullet points in exercise) to build to
+#Test cases (same as bullet points in exercise) to build towards
 ###
 
+#Modified Test 4, b dependent on a
+modjobs4 = {
+  'a' => '',
+  'b' => 'c',
+  'c' => ''
+  }
+puts 'Modified Test 4: Multiple jobs, one dependency added previously to sorted array'
+puts SortJobs modjobs4
+puts
+
+=begin
 #Is hash
 fakejobs = 'Not a job'
 puts 'Is Hash?'
@@ -116,3 +140,4 @@ jobs7 = {
   }
 puts 'Test 7: Circular dependency'
 puts SortJobs jobs7
+=end
