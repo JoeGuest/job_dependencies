@@ -1,31 +1,51 @@
-#Create method to perform sorting
+#Method to perform sorting
 def SortJobs (jobs)
   #Arrays for final sorted and temporary storing
   sortedjobs = []
   tempjobs =[]
   
-  #Testing to loop through tests and write to sortedjobs array
-  jobs.each do | job, dependency |
-    sortedjobs.push({
-      'job' => job,
-      'dependancy' => dependency
-      })
+  #Check if job structure is a hash, return error if not
+  if !jobs.is_a? Hash
+    puts 'Argument is not a hash'
+  else
+    puts '  Start of dependency checking'
+    
+    #Continue with loop + sorting
+    jobs.each do | job, dependency |
+      #If no dependency, append to end
+      if dependency.empty?
+        sortedjobs.push({
+          'job' => job,
+          'dependency' => dependency
+          })
+        puts 'No dependency'
+      #if dependency, add after dependent job
+      else
+        sortedjobs.push({
+          'job' => job,
+          'dependency' => dependency
+          })
+        puts 'Dependency'
+      end
+    end
+    
+    puts '  End of dependency checking'
   end
-    
-#Check if job structure is a hash, return error if not
-    
-#Loop through the hash
-    
-#If job has dependency, add after dependent job
-    
-#If no dependency, append to end
     
   return sortedjobs
     
 end
 
-
+###
 #Test cases (same as bullet points in exercise) to build to
+###
+
+#Is hash
+fakejobs = 'Not a job'
+puts 'Is Hash?'
+puts SortJobs fakejobs
+puts
+
 
 #Empty string
 jobs1 = {
