@@ -8,9 +8,9 @@ def SortJobs (jobs)
   if !jobs.is_a? Hash
     puts 'Argument is not a hash'
   else
-    #puts '  Start of dependency checking'
-    
     #Continue with loop + sorting
+    
+    #Initial sort from hash
     jobs.each do | job, dependency |
       #If no dependency, append to end
       if dependency.empty?
@@ -18,7 +18,6 @@ def SortJobs (jobs)
           'job' => job,
           'dependency' => dependency
           })
-        #puts 'No dependency'
       #If dependency, add after dependent job
       else
         #Search for index location within array already
@@ -36,32 +35,43 @@ def SortJobs (jobs)
             'dependency' => dependency
             })
         end
-        #puts 'Dependency'
       end
     end
-    
-    #puts '  End of dependency checking'
   end
   
-  #return sortedjobs
-  #return tempjobs
-  return ['Sorted Jobs array:', sortedjobs,'', 'Temp Jobs array', tempjobs]
-    
+  #AFTER INITIAL SORT - TESTING
+  puts ['INITIAL SORT','Sorted Jobs array:', sortedjobs,'', 'Temp Jobs array:', tempjobs]
+  puts
+
+  
+  #Checking what structure the array has
+  puts tempjobs[1]
+  
+  
+  #Loop of temp array, to insert into sorted array (if temp array contains jobs with dependencies)
+  until tempjobs.empty?
+    tempjobs.each { | jobs, dependencies | 
+      puts "I'm in the temp jobs array! #{jobs} #{dependencies}"
+      temp_index = tempjobs.find_index
+      puts temp_index
+      #tempjobs.delete_at(temp_index)
+      }
+return "Preventing infinite loop"
+
+  end
+
+  #AFTER TEMP SORT - TESTING
+  puts ['AFTER TEMP SORT','Sorted Jobs array:', sortedjobs,'', 'Temp Jobs array:', tempjobs]
+  puts
+  
+  #Return final value
+  #return ['Sorted Jobs array:', sortedjobs,'', 'Temp Jobs array', tempjobs]
+  
 end
 
 ###
 #Test cases (same as bullet points in exercise) to build towards
 ###
-
-#Modified Test 4, b dependent on a
-modjobs4 = {
-  'a' => '',
-  'b' => 'c',
-  'c' => ''
-  }
-puts 'Modified Test 4: Multiple jobs, one dependency added previously to sorted array'
-puts SortJobs modjobs4
-puts
 
 =begin
 #Is hash
@@ -69,7 +79,6 @@ fakejobs = 'Not a job'
 puts 'Is Hash?'
 puts SortJobs fakejobs
 puts
-
 
 #Empty string
 jobs1 = {
@@ -95,7 +104,7 @@ jobs3 = {
 puts 'Test 3: Multiple jobs, no dependency'
 puts SortJobs jobs3
 puts
-
+=end
 #Multiple jobs, one dependency
 jobs4 = {
   'a' => '',
@@ -104,6 +113,16 @@ jobs4 = {
   }
 puts 'Test 4: Multiple jobs, one dependency'
 puts SortJobs jobs4
+puts
+=begin
+#Modified Test 4, b dependent on a
+modjobs4 = {
+  'a' => '',
+  'b' => '',
+  'c' => 'a'
+  }
+puts 'Modified Test 4: Multiple jobs, one dependency added previously to sorted array'
+puts SortJobs modjobs4
 puts
 
 #Multiple jobs, multiple dependencies
