@@ -40,16 +40,17 @@ def SortJobs (jobs)
   end
   
   #AFTER INITIAL SORT - TESTING
-  puts ['INITIAL SORT','Sorted Jobs array:', sortedjobs,'', 'Temp Jobs array:', tempjobs]
-  puts
+  #puts ['INITIAL SORT','Sorted Jobs array:', sortedjobs,'', 'Temp Jobs array:', tempjobs]
+  #puts
 
   
   #Checking what structure the array has
-  puts tempjobs[1]
+  #puts tempjobs[1]
   
   
   #Loop of temp array, to insert into sorted array (if temp array contains jobs with dependencies)
   until tempjobs.empty?
+    num = tempjobs.length
     tempjobs.each_index do | index | 
       #puts "I'm in the temp jobs array! #{tempjobs[index]}"
       job = tempjobs[index]['job']
@@ -63,16 +64,19 @@ def SortJobs (jobs)
         tempjobs.delete_at(index)
       end
     end
-
+    if num == tempjobs.length
+      raise 'A job is either dependent on itself, or there is a circular dependency!'
+      break
+    end
   end
 
   #AFTER TEMP SORT - TESTING
-  puts ['AFTER TEMP SORT','Sorted Jobs array:', sortedjobs,'', 'Temp Jobs array:', tempjobs]
-  puts
+  #puts ['AFTER TEMP SORT','Sorted Jobs array:', sortedjobs,'', 'Temp Jobs array:', tempjobs]
+  #puts
   
   #Return final value
   #return ['Sorted Jobs array:', sortedjobs,'', 'Temp Jobs array', tempjobs]
-  
+return sortedjobs.map { | job | job['job'] }  
 end
 
 ###
@@ -153,7 +157,7 @@ jobs6 = {
 puts 'Test 6: Same dependency'
 puts SortJobs jobs6
 puts
-=begin
+
 #Jobs with circular dependency - error result
 jobs7 = {
   'a' => '',
@@ -165,4 +169,3 @@ jobs7 = {
   }
 puts 'Test 7: Circular dependency'
 puts SortJobs jobs7
-=end
