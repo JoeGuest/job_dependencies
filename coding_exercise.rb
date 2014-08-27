@@ -50,13 +50,19 @@ def SortJobs (jobs)
   
   #Loop of temp array, to insert into sorted array (if temp array contains jobs with dependencies)
   until tempjobs.empty?
-    tempjobs.each { | jobs, dependencies | 
-      puts "I'm in the temp jobs array! #{jobs} #{dependencies}"
-      temp_index = tempjobs.find_index
-      puts temp_index
-      #tempjobs.delete_at(temp_index)
-      }
-return "Preventing infinite loop"
+    tempjobs.each_index do | index | 
+      #puts "I'm in the temp jobs array! #{tempjobs[index]}"
+      job = tempjobs[index]['job']
+      dependency = tempjobs[index]['dependency']
+      existingindex = sortedjobs.find_index { |search| search['job'] == dependency }
+      if existingindex
+        sortedjobs.insert(existingindex + 1, {
+          'job' => job,
+          'dependency' => dependency
+        })
+        tempjobs.delete_at(index)
+      end
+    end
 
   end
 
@@ -104,7 +110,7 @@ jobs3 = {
 puts 'Test 3: Multiple jobs, no dependency'
 puts SortJobs jobs3
 puts
-=end
+
 #Multiple jobs, one dependency
 jobs4 = {
   'a' => '',
@@ -114,7 +120,7 @@ jobs4 = {
 puts 'Test 4: Multiple jobs, one dependency'
 puts SortJobs jobs4
 puts
-=begin
+
 #Modified Test 4, b dependent on a
 modjobs4 = {
   'a' => '',
@@ -137,7 +143,7 @@ jobs5 = {
 puts 'Test 5: Multiple jobs, multiple dependencies'
 puts SortJobs jobs5
 puts
-
+=end
 #Jobs with same dependency - error result
 jobs6 = {
   'a' => '',
@@ -147,7 +153,7 @@ jobs6 = {
 puts 'Test 6: Same dependency'
 puts SortJobs jobs6
 puts
-
+=begin
 #Jobs with circular dependency - error result
 jobs7 = {
   'a' => '',
