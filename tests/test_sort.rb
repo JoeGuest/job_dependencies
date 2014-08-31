@@ -6,7 +6,7 @@ require "minitest/autorun"
 class TestSort < MiniTest::Test
   
   def test_is_hash #Is hash
-    assert_raises( RuntimeError ) {SortAlgorithm.new.SortJobs(5)}
+    assert_raises( RuntimeError ) {SortAlgorithm.new.check_if_hash(5)}
   end
   
   def test_1 #Empty String
