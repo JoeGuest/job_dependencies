@@ -15,30 +15,15 @@ class SortAlgorithm
   end
   
   def initial_sort
-    #Initial sort from hash
     @input_hash.each do | job, dependency |
-      #If no dependency, append to end
       if dependency.empty?
-        @sortedjobs.push({
-          'job' => job,
-          'dependency' => dependency
-          })
-      #If dependency, add after dependent job
+        add_to_sorted(job, dependency)
       else
-        #Search for index location within array already
-        existingindex = @sortedjobs.find_index { |search| search['job'] == dependency }
-        #If dependency within sorted array already, insert to index location + 1
-        if existingindex
-          @sortedjobs.insert(existingindex + 1, {
-            'job' => job,
-            'dependency' => dependency
-            })
-          #If dependency not within array, write to temp
+        find_index(job, dependency)
+        if @existingindex
+          add_to_sorted_at_index(job, dependency)
         else
-          @tempjobs.push({
-            'job' => job,
-            'dependency' => dependency
-            })
+          add_to_temp(job, dependency)
         end
       end
     end
@@ -48,15 +33,11 @@ class SortAlgorithm
     until @tempjobs.empty?
       num = @tempjobs.length
       @tempjobs.each_index do | index | 
-        #puts "I'm in the temp jobs array! #{tempjobs[index]}"
         job = @tempjobs[index]['job']
         dependency = @tempjobs[index]['dependency']
-        existingindex = @sortedjobs.find_index { |search| search['job'] == dependency }
-        if existingindex
-          @sortedjobs.insert(existingindex + 1, {
-            'job' => job,
-            'dependency' => dependency
-          })
+        find_index(job, dependency)
+        if @existingindex
+          add_to_sorted_at_index(job, dependency)
           @tempjobs.delete_at(index)
         end
       end
@@ -73,16 +54,29 @@ class SortAlgorithm
     end
   end
   
-  def add_to_sorted
+  def add_to_sorted(job, dependency)
+    @sortedjobs.push({
+          'job' => job,
+          'dependency' => dependency
+          })
   end
   
-  def add_to_temp
+  def add_to_temp(job, dependency)
+    @tempjobs.push({
+            'job' => job,
+            'dependency' => dependency
+            })
   end
   
-  def find_index
+  def find_index(job, dependency)
+    @existingindex = @sortedjobs.find_index { |search| search['job'] == dependency }
   end
   
-  def add_to_index_plus_1
+  def add_to_sorted_at_index(job, dependency)
+    @sortedjobs.insert(@existingindex + 1, {
+            'job' => job,
+            'dependency' => dependency
+            })
   end
 
   def display_result
