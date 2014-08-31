@@ -1,70 +1,50 @@
 class SortAlgorithm
    
-  def initialize()
+  def initialize(input_hash)
+    @input_hash = input_hash
     #Arrays for final sorted and temporary storing
     @sortedjobs = []
     @tempjobs = []
   end
   
-  def initial_sort()
+  def run
+    check_if_hash
+    initial_sort
+    sort_temp
+    display_result
   end
   
-  def sort_temp()
-  end
-  
-  def check_if_hash(jobs)
-    if !jobs.is_a? Hash
-      raise 'Argument is not a hash'
-      return
-    end
-  end
-  
-  def add_to_sorted()
-  end
-  
-  def add_to_temp()
-  end
-  
-  def find_index()
-  end
-  
-  def add_to_index_plus_1()
-  end
-  
-  #Method to perform sorting
-  def SortJobs(jobs)
-      
-      #Initial sort from hash
-      jobs.each do | job, dependency |
-        #If no dependency, append to end
-        if dependency.empty?
-          @sortedjobs.push({
+  def initial_sort
+    #Initial sort from hash
+    @input_hash.each do | job, dependency |
+      #If no dependency, append to end
+      if dependency.empty?
+        @sortedjobs.push({
+          'job' => job,
+          'dependency' => dependency
+          })
+      #If dependency, add after dependent job
+      else
+        #Search for index location within array already
+        existingindex = @sortedjobs.find_index { |search| search['job'] == dependency }
+        #If dependency within sorted array already, insert to index location + 1
+        if existingindex
+          @sortedjobs.insert(existingindex + 1, {
             'job' => job,
             'dependency' => dependency
             })
-        #If dependency, add after dependent job
-        else
-          #Search for index location within array already
-          existingindex = @sortedjobs.find_index { |search| search['job'] == dependency }
-          #If dependency within sorted array already, insert to index location + 1
-          if existingindex
-            @sortedjobs.insert(existingindex + 1, {
-              'job' => job,
-              'dependency' => dependency
-              })
           #If dependency not within array, write to temp
-          else
-            @tempjobs.push({
-              'job' => job,
-              'dependency' => dependency
-              })
-          end
+        else
+          @tempjobs.push({
+            'job' => job,
+            'dependency' => dependency
+            })
         end
       end
     end
-
-    #Loop of temp array, to insert into sorted array (if temp array contains jobs with dependencies)
-    
+  end
+  
+  def sort_temp
     until @tempjobs.empty?
       num = @tempjobs.length
       @tempjobs.each_index do | index | 
@@ -85,13 +65,28 @@ class SortAlgorithm
         break
       end
     end
-
-  return @sortedjobs.map { | job | job['job'] }
-
   end
-end
+  
+  def check_if_hash
+    if !@input_hash.is_a? Hash
+      raise TypeError, 'Argument is not a hash'
+    end
+  end
+  
+  def add_to_sorted
+  end
+  
+  def add_to_temp
+  end
+  
+  def find_index
+  end
+  
+  def add_to_index_plus_1
+  end
 
-sort = SortAlgorithm.new
-input_hash = {'a' => ''}
-sort.check_if_hash(input_hash)
-puts sort.SortJobs(input_hash)
+  def display_result
+    return @sortedjobs.map { | job | job['job'] }
+  end
+  
+end
